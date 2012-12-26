@@ -6,7 +6,8 @@ module Mws::Apis::Feeds
 
     attr_reader :sku, :description
 
-    attr_accessor :upc, :tax_code, :msrp, :brand, :manufacturer, :name, :description, :bullet_points
+    attr_accessor :standard_product_id, :standard_product_id_type
+    attr_accessor :tax_code, :msrp, :brand, :manufacturer, :name, :description, :bullet_points
     attr_accessor :item_dimensions, :package_dimensions, :package_weight, :shipping_weight
     attr_accessor :category, :details
 
@@ -17,14 +18,29 @@ module Mws::Apis::Feeds
       raise Mws::Errors::ValidationError, 'Product must have a category when details are specified.' if @details and @category.nil?
     end
 
+    %w[UPC ASIN ISBN EAN GTIN].each do |t|
+      m = t.downcase
+
+      define_method(m) do
+        @standard_product_id_type == t ? @standard_product_id : nil        
+      end
+
+      define_method("#{m}=") do |pid|
+        @standard_product_id_type = pid.nil? ? nil : t
+        @standard_product_id = pid
+      end
+    end
+
     def to_xml(name='Product', parent=nil)
       Mws::Serializer.tree name, parent do |xml|
         xml.SKU @sku
+
         xml.StandardProductID {
-          xml.Type 'UPC'
-          xml.Value @upc
-        } unless @upc.nil?
-        xml.ProductTaxCode @tax_code unless @upc.nil?
+          xml.Type @standard_product_id_type
+          xml.Value @standard_product_id
+        } unless @standard_product_id.nil?
+
+        xml.ProductTaxCode @tax_code unless @standard_product_id.nil?
         xml.DescriptionData {
           xml.Title @name unless @name.nil?
           xml.Brand @brand  unless @brand.nil?

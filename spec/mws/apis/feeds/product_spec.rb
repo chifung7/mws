@@ -38,6 +38,13 @@ module Mws::Apis::Feeds
         product.name.should == 'Test Product'
       end
 
+      it 'should support building with isbn' do
+        product = Product.new('12324') do
+          isbn '9781888363821'
+        end
+        product.isbn.should == '9781888363821'
+      end
+
       it 'should support building with msrp' do
         product = Product.new('12324') do
           msrp 10.99, :usd
