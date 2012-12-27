@@ -237,7 +237,7 @@ module Mws::Apis::Feeds
         expected = Nokogiri::XML::Builder.new do
           Product {
             SKU '12343'
-            DescriptionData {}
+            #DescriptionData {}
             ProductData {
               CE {
                 ProductType {

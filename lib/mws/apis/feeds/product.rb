@@ -41,23 +41,26 @@ module Mws::Apis::Feeds
         } unless @standard_product_id.nil?
 
         xml.ProductTaxCode @tax_code unless @standard_product_id.nil?
-        xml.DescriptionData {
-          xml.Title @name unless @name.nil?
-          xml.Brand @brand  unless @brand.nil?
-          xml.Description @description  unless @description.nil?
-          bullet_points.each do | bullet_point |
-            xml.BulletPoint bullet_point
-          end
-          @item_dimensions.to_xml('ItemDimensions', xml) unless @item_dimensions.nil?
-          @package_dimensions.to_xml('PackageDimensions', xml) unless @item_dimensions.nil?
+        unless @name.nil? and @brand.nil? and @description.nil? and @item_dimensions.nil? and
+            @package_weight.nil? and @shipping_weight.nil? and @msrp.nil? and @manufacture.nil?
+          xml.DescriptionData {
+            xml.Title @name unless @name.nil?
+            xml.Brand @brand  unless @brand.nil?
+            xml.Description @description  unless @description.nil?
+            bullet_points.each do | bullet_point |
+              xml.BulletPoint bullet_point
+            end
+            @item_dimensions.to_xml('ItemDimensions', xml) unless @item_dimensions.nil?
+            @package_dimensions.to_xml('PackageDimensions', xml) unless @item_dimensions.nil?
 
-          @package_weight.to_xml('PackageWeight', xml) unless @package_weight.nil?
-          @shipping_weight.to_xml('ShippingWeight', xml) unless @shipping_weight.nil?
+            @package_weight.to_xml('PackageWeight', xml) unless @package_weight.nil?
+            @shipping_weight.to_xml('ShippingWeight', xml) unless @shipping_weight.nil?
 
-          @msrp.to_xml 'MSRP', xml unless @msrp.nil?
+            @msrp.to_xml 'MSRP', xml unless @msrp.nil?
 
-          xml.Manufacturer @manufacturer unless @manufacturer.nil?
-        }
+            xml.Manufacturer @manufacturer unless @manufacturer.nil?
+          }
+        end
 
         unless @details.nil?
           xml.ProductData {
