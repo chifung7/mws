@@ -4,9 +4,10 @@ module Mws::Apis::Feeds
 
     CategorySerializer = Mws::Serializer.new ce: 'CE', fba: 'FBA', eu_compliance: 'EUCompliance'
 
-    attr_reader :sku, :description
+    attr_reader :sku
 
     attr_accessor :standard_product_id, :standard_product_id_type
+    attr_accessor :condition
     attr_accessor :tax_code, :msrp, :brand, :manufacturer, :name, :description, :bullet_points
     attr_accessor :item_dimensions, :package_dimensions, :package_weight, :shipping_weight
     attr_accessor :category, :details
@@ -41,6 +42,9 @@ module Mws::Apis::Feeds
         } unless @standard_product_id.nil?
 
         xml.ProductTaxCode @tax_code unless @standard_product_id.nil?
+
+        @condition.to_xml('Condition', xml) unless @condition.nil?
+
         unless @name.nil? and @brand.nil? and @description.nil? and @item_dimensions.nil? and
             @package_weight.nil? and @shipping_weight.nil? and @msrp.nil? and @manufacture.nil?
           xml.DescriptionData {
@@ -88,6 +92,11 @@ module Mws::Apis::Feeds
         @product = product
       end
 
+      def condition(&block)
+        @product.condition = Condition.new
+        ConditionBuilder.new(@product.condition).instance_eval &block if block_given?
+      end
+
       def msrp(amount, currency)
         @product.msrp = Money.new amount, currency
       end
@@ -119,6 +128,52 @@ module Mws::Apis::Feeds
         DetailBuilder.new(@product.details).instance_eval &block if block_given?
       end
 
+    end
+
+    class Condition
+      Type = Mws::Enum.for(new: 'New',
+                           like_new: 'UsedLikeNew',
+                           very_good: 'UsedVeryGood',
+                           good: 'UsedGood',
+                           acceptable: 'UsedAcceptable',
+                           collectible_like_new: 'CollectibleLikeNew',
+                           collectible_very_good: 'CollectibleVeryGood',
+                           collectible_good: 'CollectibleGood',
+                           collectible_acceptable: 'CollectibleAcceptable',
+                           club: 'Club')
+
+      attr_accessor :type, :note
+      def type=(t)
+        t.nil? or Type.for(t) or raise Mws::Errors::ValidationError, 'Invalid Condition Type #{t}.'
+        @type = t
+      end
+
+      def note=(n)
+        n.nil? or n.length <= 2000 or raise Mws::Errors::ValidationError, 'Condition Note too long: #{n}'
+        @note = n
+      end
+
+      def to_xml(name='Condition', parent=nil)
+        Mws::Serializer.tree name, parent do |xml|
+          t = Type.for(@type || :new)
+          xml.ConditionType t.val
+          xml.ConditionNote @note
+        end
+      end
+    end
+
+    class ConditionBuilder
+      def initialize(condition)
+        @condition = condition
+      end
+
+      def type(t)
+        @condition.type = t
+      end
+
+      def note(n)
+        @condition.note = n
+      end
     end
 
     class Dimensions

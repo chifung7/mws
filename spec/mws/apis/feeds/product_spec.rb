@@ -45,6 +45,29 @@ module Mws::Apis::Feeds
         product.isbn.should == '9781888363821'
       end
 
+      it 'should support condition type and note' do
+        product = Product.new('12324') do
+          isbn '9781888363821'
+          condition do
+            type :like_new
+            note 'Like New. Never Used'
+          end
+        end
+        product.condition.type.should == :like_new
+        product.condition.note.should == 'Like New. Never Used'
+      end
+
+      it 'should support condition note and default to :new type' do
+        product = Product.new('12324') do
+          isbn '9781888363821'
+          condition do
+            note 'Brand New'
+          end
+        end
+        product.condition.type.should be_nil
+        product.condition.note.should == 'Brand New'
+      end
+
       it 'should support building with msrp' do
         product = Product.new('12324') do
           msrp 10.99, :usd
@@ -175,6 +198,10 @@ module Mws::Apis::Feeds
               Value '432154321'
             }
             ProductTaxCode 'GEN_TAX_CODE'
+            Condition {
+              ConditionType 'UsedLikeNew'
+              ConditionNote 'Like New. Never Used'
+            }
             DescriptionData {
               Title 'Test Product'
               Brand 'Test Brand'
@@ -205,6 +232,10 @@ module Mws::Apis::Feeds
 
         expected.should == Product.new('12343') do
           upc '432154321'
+          condition {
+            type :like_new
+            note 'Like New. Never Used'
+          }
           tax_code 'GEN_TAX_CODE'
           brand 'Test Brand'
           name 'Test Product'
@@ -231,6 +262,31 @@ module Mws::Apis::Feeds
           shipping_weight 3, :miligrams
         end.to_xml
         
+      end
+
+      it 'should create xml for product default to new condition' do
+        expected = Nokogiri::XML::Builder.new do
+          Product {
+            SKU '12343'
+            StandardProductID {
+              Type 'ASIN'
+              Value '4321543210'
+            }
+            ProductTaxCode 'GEN_TAX_CODE'
+            Condition {
+              ConditionType 'New'
+              ConditionNote 'Brand New'
+            }
+          }
+        end.doc.root.to_xml
+
+        expected.should == Product.new('12343') do
+          asin '4321543210'
+          condition {
+            note 'Brand New'
+          }
+          tax_code 'GEN_TAX_CODE'
+        end.to_xml
       end
 
       it 'should create xml for product details' do
