@@ -18,12 +18,12 @@ module Mws::Apis::Feeds
     
     def initialize(node)
       @transaction_id = node.xpath('ProcessingReport/DocumentTransactionID').first.text.to_s
-      @status = Status.for(node.xpath('ProcessingReport/StatusCode').first.text)
-      @messages_processed = node.xpath('ProcessingReport/ProcessingSummary/MessagesProcessed').first.text.to_i
+      @status = Status.for(node.xpath('ProcessingReport/Summary/StatusCode').first.try(:text))
+      @messages_processed = node.xpath('ProcessingReport/Summary/ProcessingSummary/MessagesProcessed').first.try(:text).try(:to_i)
       
       @counts = {}
       [ Response::Type.SUCCESS, Response::Type.ERROR, Response::Type.WARNING ].each do | type |
-        @counts[type.sym] = node.xpath("ProcessingReport/ProcessingSummary/#{type.val.first}").first.text.to_i
+        @counts[type.sym] = node.xpath("ProcessingReport/Summary/ProcessingSummary/#{type.val.first}").first.try(:text).try(:to_i)
       end
       @responses = {}
       node.xpath('ProcessingReport/Result').each do | result_node |
