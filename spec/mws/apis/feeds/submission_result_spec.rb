@@ -14,12 +14,14 @@ module Mws::Apis::Feeds
           MessageID 1
           ProcessingReport {
             DocumentTransactionID 5868304010
-            StatusCode 'Complete'
-            ProcessingSummary {
-              MessagesProcessed 1
-              MessagesSuccessful 1
-              MessagesWithError 0
-              MessagesWithWarning 0
+            Summary {
+              StatusCode 'Complete'
+              ProcessingSummary {
+                MessagesProcessed 1
+                MessagesSuccessful 1
+                MessagesWithError 0
+                MessagesWithWarning 0
+              }
             }
           }
         }
@@ -31,12 +33,14 @@ module Mws::Apis::Feeds
           MessageID 1
           ProcessingReport {
             DocumentTransactionID 5868304010
-            StatusCode 'Complete'
-            ProcessingSummary {
-              MessagesProcessed 2
-              MessagesSuccessful 0
-              MessagesWithError 2
-              MessagesWithWarning 1
+            Summary {
+              StatusCode 'Complete'
+              ProcessingSummary {
+                MessagesProcessed 2
+                MessagesSuccessful 0
+                MessagesWithError 2
+                MessagesWithWarning 1
+              }
             }
             Result {
               MessageID 1
