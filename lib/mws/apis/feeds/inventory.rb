@@ -24,7 +24,7 @@ module Mws::Apis::Feeds
         xml.FulfillmentCenterID @fulfillment.center unless @fulfillment.center.nil?
         xml.Available @available unless @available.nil?
         xml.Quantity @quantity unless @quantity.nil?
-        xml.Lookup @lookup unless @lookup.nil?
+        xml.Lookup 'FulfillmentNetwork' if @lookup
         xml.RestockDate @restock.iso8601 unless @restock.nil?
         xml.FulfillmentLatency @fulfillment.latency unless @fulfillment.latency.nil?
         xml.SwitchFulfillmentTo Fulfillment::Type.for(@fulfillment.type).val unless @fulfillment.type.nil?
@@ -64,9 +64,12 @@ module Mws::Apis::Feeds
       unless @quantity.nil? or (@quantity.to_i == @quantity and @quantity >= 0)
         raise Mws::Errors::ValidationError.new('Quantity must be a whole number greater than or equal to zero.')
       end
+
+      # "XML Parsing Error at Line 15, Column 28: cvc-type.3.1.3: The value 'true' of element 'Lookup' is not valid."
       unless @lookup.nil? or [ true, false ].include? @lookup
         raise Mws::Errors::ValidationError.new('Lookup must be either true or false.')
       end
+
       unless @restock.nil? or (@restock.respond_to? :iso8601 and Time.now < @restock)
         raise Mws::Errors::ValidationError.new('Restock date must be in the future.')
       end
