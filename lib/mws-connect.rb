@@ -13,9 +13,6 @@ module Mws
   autoload :Signer, 'mws/signer'
   autoload :Utils, 'mws/utils'
 
-  # The current version of this ruby gem
-  VERSION = '0.0.3'
-
   Utils.alias self, Apis::Feeds, 
     :Distance,
     :Feed,

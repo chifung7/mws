@@ -17,3 +17,6 @@ test/tmp
 test/version_tmp
 tmp
 *.sublime-workspace
+scripts/credentials.yml
+.ruby-version
+.ruby-gemset
