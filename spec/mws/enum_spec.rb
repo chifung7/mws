@@ -4,8 +4,8 @@ module Mws
 
   describe Enum do
 
-    let (:options) do
-      {
+    before(:all) do
+      @options = {
         pending: 'Pending',
         unshipped: [ 'Unshipped', 'PartiallyShipped' ],
         shipped: 'Shipped',
@@ -13,11 +13,11 @@ module Mws
         cancelled: 'Cancelled',
         unfulfillable: 'Unfulfillable'
       }
+
+      OrderStatus = Enum.for @options
     end
 
-    before(:all) do
-      OrderStatus = Enum.for options
-    end
+    let (:options) { @options }
 
     it 'should not allow instance creation via new' do
       expect { Enum.new }.to raise_error NoMethodError
