@@ -8,13 +8,14 @@ module Mws::Apis::Feeds
 
     attr_accessor :standard_product_id, :standard_product_id_type
     attr_accessor :condition
-    attr_accessor :tax_code, :msrp, :brand, :manufacturer, :name, :description, :bullet_points
+    attr_accessor :tax_code, :msrp, :brand, :manufacturer, :name, :description, :bullet_points, :item_type
     attr_accessor :item_dimensions, :package_dimensions, :package_weight, :shipping_weight
     attr_accessor :category, :details
 
     def initialize(sku, &block)
       @sku = sku
       @bullet_points = []
+
       ProductBuilder.new(self).instance_eval &block if block_given?
       raise Mws::Errors::ValidationError, 'Product must have a category when details are specified.' if @details and @category.nil?
     end
@@ -46,7 +47,7 @@ module Mws::Apis::Feeds
         @condition.to_xml('Condition', xml) unless @condition.nil?
 
         unless @name.nil? and @brand.nil? and @description.nil? and @item_dimensions.nil? and
-            @package_weight.nil? and @shipping_weight.nil? and @msrp.nil? and @manufacture.nil?
+            @package_weight.nil? and @shipping_weight.nil? and @msrp.nil? and @manufacture.nil? and @item_type.nil?
           xml.DescriptionData {
             xml.Title @name unless @name.nil?
             xml.Brand @brand  unless @brand.nil?
@@ -54,6 +55,8 @@ module Mws::Apis::Feeds
             bullet_points.each do | bullet_point |
               xml.BulletPoint bullet_point
             end
+            xml.ItemType @item_type unless @item_type.nil?
+
             @item_dimensions.to_xml('ItemDimensions', xml) unless @item_dimensions.nil?
             @package_dimensions.to_xml('PackageDimensions', xml) unless @item_dimensions.nil?
 
