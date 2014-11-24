@@ -22,7 +22,7 @@ module Mws::Apis::Feeds
       end
 
       it 'should accept a valid value for sku' do
-        Inventory.new('987612345', quantity: 1).sku.should == '987612345'
+        expect(Inventory.new('987612345', quantity: 1).sku).to eq('987612345')
       end
 
       it 'should require one of available, quantity or lookup' do
@@ -36,7 +36,7 @@ module Mws::Apis::Feeds
       end
 
       it 'should accept a valid value for available' do
-        Inventory.new('98712345', available: true).available.should be true
+        expect(Inventory.new('98712345', available: true).available).to be true
       end
 
       it 'should require quantity to be a whole number greater than or equal to zero' do
@@ -45,7 +45,7 @@ module Mws::Apis::Feeds
       end
 
       it 'should accept a valid value for quantity' do
-        Inventory.new('987612345', quantity: 1).quantity.should == 1
+        expect(Inventory.new('987612345', quantity: 1).quantity).to eq(1)
       end
 
       it 'should require a boolean value for lookup' do
@@ -54,7 +54,7 @@ module Mws::Apis::Feeds
       end
 
       it 'should accept a valid value for lookup' do
-        Inventory.new('987612345', lookup: true).lookup.should be true
+        expect(Inventory.new('987612345', lookup: true).lookup).to be true
       end
 
       it 'should accept only one of available, quantity or lookup' do
@@ -65,7 +65,7 @@ module Mws::Apis::Feeds
       end
 
       it 'should accept a valid fulfillment center' do
-        Inventory.new('987612345', quantity: 1, fulfillment_center: 'foo').fulfillment.center.should == 'foo'
+        expect(Inventory.new('987612345', quantity: 1, fulfillment_center: 'foo').fulfillment.center).to eq('foo')
       end
 
       it 'should require fulfillment latency to be a whole number greater than zero' do
@@ -76,7 +76,7 @@ module Mws::Apis::Feeds
       end
 
       it 'should accept a valid fulfillment latency' do
-        Inventory.new('987612345', quantity: 1, fulfillment_latency: 1).fulfillment.latency.should == 1
+        expect(Inventory.new('987612345', quantity: 1, fulfillment_latency: 1).fulfillment.latency).to eq(1)
       end
 
       it 'should require fulfillment type to be either AFN or MFN' do
@@ -87,7 +87,7 @@ module Mws::Apis::Feeds
       end
 
       it 'should accept a valid fulfillment type' do
-        Inventory.new('987612345', quantity: 1, fulfillment_type: :mfn).fulfillment.type.should == :mfn 
+        expect(Inventory.new('987612345', quantity: 1, fulfillment_type: :mfn).fulfillment.type).to eq(:mfn) 
       end
 
       it 'should require the restock date to be in the future' do
@@ -99,7 +99,7 @@ module Mws::Apis::Feeds
 
       it 'should accept a valid restock date' do
         restock = 4.days.from_now
-        Inventory.new('987612345', quantity: 0, restock: restock).restock.should == restock
+        expect(Inventory.new('987612345', quantity: 0, restock: restock).restock).to eq(restock)
       end
 
     end
@@ -125,7 +125,7 @@ module Mws::Apis::Feeds
             SwitchFulfillmentTo 'MFN'
           }
         end.doc.root.to_xml
-        inventory.to_xml.should == expected
+        expect(inventory.to_xml).to eq(expected)
       end
 
     end

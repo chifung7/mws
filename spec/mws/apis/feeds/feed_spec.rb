@@ -20,11 +20,11 @@ module Mws::Apis::Feeds
       end
 
       it 'shoud default purge and replace to false' do
-        Feed.new(merchant, message_type).purge_and_replace.should be false
+        expect(Feed.new(merchant, message_type).purge_and_replace).to be false
       end
 
       it 'should accept overrides to purge and replace' do
-        Feed.new(merchant, message_type, true).purge_and_replace.should be true
+        expect(Feed.new(merchant, message_type, true).purge_and_replace).to be true
       end
 
       it 'should accept a block to append messages to the feed' do
@@ -32,17 +32,17 @@ module Mws::Apis::Feeds
           message ImageListing.new('1', 'http://foo.com/bar.jpg'), :delete
           message ImageListing.new('1', 'http://bar.com/foo.jpg')
         end
-        feed.messages.size.should == 2
+        expect(feed.messages.size).to eq(2)
         first = feed.messages.first
-        first.id.should == 1
-        first.type.should == :image
-        first.operation_type.should == :delete
-        first.resource.should == ImageListing.new('1', 'http://foo.com/bar.jpg')
+        expect(first.id).to eq(1)
+        expect(first.type).to eq(:image)
+        expect(first.operation_type).to eq(:delete)
+        expect(first.resource).to eq(ImageListing.new('1', 'http://foo.com/bar.jpg'))
         second = feed.messages.last
-        second.id.should == 2
-        second.type.should == :image
-        second.operation_type.should == :update
-        second.resource.should == ImageListing.new('1', 'http://bar.com/foo.jpg')
+        expect(second.id).to eq(2)
+        expect(second.type).to eq(:image)
+        expect(second.operation_type).to eq(:update)
+        expect(second.resource).to eq(ImageListing.new('1', 'http://bar.com/foo.jpg'))
       end
 
     end
@@ -82,7 +82,7 @@ module Mws::Apis::Feeds
           message ImageListing.new('1', 'http://foo.com/bar.jpg'), :delete
           message ImageListing.new('1', 'http://bar.com/foo.jpg')
         end.to_xml
-        actual.should == expected
+        expect(actual).to eq(expected)
       end
 
     end

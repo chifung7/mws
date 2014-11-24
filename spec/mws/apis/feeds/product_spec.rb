@@ -11,7 +11,7 @@ module Mws::Apis::Feeds
         expect { Product.new }.to raise_error ArgumentError 
 
         sku = '12343533'
-        Product.new(sku).sku.should == sku
+        expect(Product.new(sku).sku).to eq(sku)
       end
 
       it 'should support product builder block initialization' do
@@ -19,7 +19,7 @@ module Mws::Apis::Feeds
         product = Product.new('123431') do 
           capture = self
         end
-        capture.should be_an_instance_of Product::ProductBuilder
+        expect(capture).to be_an_instance_of Product::ProductBuilder
       end
 
       it 'should support building with upc, tax code, brand, manufacture and name' do
@@ -31,18 +31,18 @@ module Mws::Apis::Feeds
           name 'Test Product'
         end
 
-        product.upc.should == '4321'
-        product.tax_code.should == 'GEN_TAX_CODE'
-        product.brand.should == 'Test Brand'
-        product.manufacturer.should == 'Test manufacture'
-        product.name.should == 'Test Product'
+        expect(product.upc).to eq('4321')
+        expect(product.tax_code).to eq('GEN_TAX_CODE')
+        expect(product.brand).to eq('Test Brand')
+        expect(product.manufacturer).to eq('Test manufacture')
+        expect(product.name).to eq('Test Product')
       end
 
       it 'should support building with isbn' do
         product = Product.new('12324') do
           isbn '9781888363821'
         end
-        product.isbn.should == '9781888363821'
+        expect(product.isbn).to eq('9781888363821')
       end
 
       it 'should support condition type and note' do
@@ -53,8 +53,8 @@ module Mws::Apis::Feeds
             note 'Like New. Never Used'
           end
         end
-        product.condition.type.should == :like_new
-        product.condition.note.should == 'Like New. Never Used'
+        expect(product.condition.type).to eq(:like_new)
+        expect(product.condition.note).to eq('Like New. Never Used')
       end
 
       it 'should support condition note and default to :new type' do
@@ -64,8 +64,8 @@ module Mws::Apis::Feeds
             note 'Brand New'
           end
         end
-        product.condition.type.should be_nil
-        product.condition.note.should == 'Brand New'
+        expect(product.condition.type).to be_nil
+        expect(product.condition.note).to eq('Brand New')
       end
 
       it 'should support building with msrp' do
@@ -73,8 +73,8 @@ module Mws::Apis::Feeds
           msrp 10.99, :usd
         end
 
-        product.msrp.amount.should == 10.99
-        product.msrp.currency.should == :usd
+        expect(product.msrp.amount).to eq(10.99)
+        expect(product.msrp.currency).to eq(:usd)
       end
 
       it 'should support building with item dimensions' do
@@ -87,10 +87,10 @@ module Mws::Apis::Feeds
           }
         end
 
-        product.item_dimensions.length.should == Distance.new(2, :feet)
-        product.item_dimensions.width.should == Distance.new(3, :inches)
-        product.item_dimensions.height.should == Distance.new(1, :meters)
-        product.item_dimensions.weight.should == Weight.new(4, :pounds)
+        expect(product.item_dimensions.length).to eq(Distance.new(2, :feet))
+        expect(product.item_dimensions.width).to eq(Distance.new(3, :inches))
+        expect(product.item_dimensions.height).to eq(Distance.new(1, :meters))
+        expect(product.item_dimensions.weight).to eq(Weight.new(4, :pounds))
       end
 
       it 'should support building with package dimensions' do
@@ -103,10 +103,10 @@ module Mws::Apis::Feeds
           }
         end
 
-        product.package_dimensions.length.should == Distance.new(2, :feet)
-        product.package_dimensions.width.should == Distance.new(3, :inches)
-        product.package_dimensions.height.should == Distance.new(1, :meters)
-        product.package_dimensions.weight.should == Weight.new(4, :pounds)
+        expect(product.package_dimensions.length).to eq(Distance.new(2, :feet))
+        expect(product.package_dimensions.width).to eq(Distance.new(3, :inches))
+        expect(product.package_dimensions.height).to eq(Distance.new(1, :meters))
+        expect(product.package_dimensions.weight).to eq(Weight.new(4, :pounds))
       end
     
       it 'should require valid package and shipping dimensions' do
@@ -129,12 +129,12 @@ module Mws::Apis::Feeds
           bullet_point 'Bullet Point 3'
           bullet_point 'Bullet Point 4'
         end
-        product.description.should == 'This is a test product description.'
-        product.bullet_points.length.should == 4
-        product.bullet_points[0].should == 'Bullet Point 1'
-        product.bullet_points[1].should == 'Bullet Point 2'
-        product.bullet_points[2].should == 'Bullet Point 3'
-        product.bullet_points[3].should == 'Bullet Point 4'
+        expect(product.description).to eq('This is a test product description.')
+        expect(product.bullet_points.length).to eq(4)
+        expect(product.bullet_points[0]).to eq('Bullet Point 1')
+        expect(product.bullet_points[1]).to eq('Bullet Point 2')
+        expect(product.bullet_points[2]).to eq('Bullet Point 3')
+        expect(product.bullet_points[3]).to eq('Bullet Point 4')
       end
 
 
@@ -144,8 +144,8 @@ module Mws::Apis::Feeds
           shipping_weight 4, :ounces
         end
 
-        product.package_weight.should == Weight.new(3, :pounds)
-        product.shipping_weight.should == Weight.new(4, :ounces)
+        expect(product.package_weight).to eq(Weight.new(3, :pounds))
+        expect(product.shipping_weight).to eq(Weight.new(4, :ounces))
       end
 
       it 'should support building with product details' do
@@ -162,10 +162,10 @@ module Mws::Apis::Feeds
           }
         end
 
-        product.details.should_not be nil
-        product.details[:value].should == 'some value'
-        product.details[:nested][:foo].should == 'bar'
-        product.details[:nested][:nested][:baz].should == 'bahhh'
+        expect(product.details).not_to be nil
+        expect(product.details[:value]).to eq('some value')
+        expect(product.details[:nested][:foo]).to eq('bar')
+        expect(product.details[:nested][:nested][:baz]).to eq('bahhh')
       end
 
       it 'should require a category when product details are specified' do
@@ -230,7 +230,7 @@ module Mws::Apis::Feeds
           }
         end.doc.root.to_xml
 
-        expected.should == Product.new('12343') do
+        expect(expected).to eq(Product.new('12343') do
           upc '432154321'
           condition {
             type :like_new
@@ -260,7 +260,7 @@ module Mws::Apis::Feeds
           }
           package_weight 2, :pounds
           shipping_weight 3, :miligrams
-        end.to_xml
+        end.to_xml)
         
       end
 
@@ -280,13 +280,13 @@ module Mws::Apis::Feeds
           }
         end.doc.root.to_xml
 
-        expected.should == Product.new('12343') do
+        expect(expected).to eq(Product.new('12343') do
           asin '4321543210'
           condition {
             note 'Brand New'
           }
           tax_code 'GEN_TAX_CODE'
-        end.to_xml
+        end.to_xml)
       end
 
       it 'should create xml for product details' do
@@ -308,7 +308,7 @@ module Mws::Apis::Feeds
           }
         end.doc.root.to_xml
 
-        expected.should == Product.new('12343') do 
+        expect(expected).to eq(Product.new('12343') do 
           category :ce
           details {
             cable_or_adapter {
@@ -317,7 +317,7 @@ module Mws::Apis::Feeds
               cost_savings as_money 6.99, :usd
             }    
           }
-        end.to_xml
+        end.to_xml)
       end
 
     end

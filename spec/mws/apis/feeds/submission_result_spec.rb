@@ -82,49 +82,49 @@ module Mws::Apis::Feeds
 
       it 'should be able to be constructed from valid success xml' do
         result = SubmissionResult.from_xml success_node
-        result.transaction_id.should == '5868304010'
-        result.status.should == SubmissionResult::Status.COMPLETE.sym
-        result.messages_processed.should == 1
-        result.count_for(:success).should == 1
-        result.count_for(:error).should == 0
-        result.count_for(:warning).should == 0
-        result.responses.should be_empty
+        expect(result.transaction_id).to eq('5868304010')
+        expect(result.status).to eq(SubmissionResult::Status.COMPLETE.sym)
+        expect(result.messages_processed).to eq(1)
+        expect(result.count_for(:success)).to eq(1)
+        expect(result.count_for(:error)).to eq(0)
+        expect(result.count_for(:warning)).to eq(0)
+        expect(result.responses).to be_empty
       end
 
       it 'should be able to be constructed from valid error xml' do 
         result = SubmissionResult.from_xml error_node
-        result.transaction_id.should == '5868304010'
-        result.status.should == SubmissionResult::Status.COMPLETE.sym
-        result.messages_processed.should == 2
-        result.count_for(:success).should == 0
-        result.count_for(:error).should == 2
-        result.count_for(:warning).should == 1
-        result.responses.size.should == 3
+        expect(result.transaction_id).to eq('5868304010')
+        expect(result.status).to eq(SubmissionResult::Status.COMPLETE.sym)
+        expect(result.messages_processed).to eq(2)
+        expect(result.count_for(:success)).to eq(0)
+        expect(result.count_for(:error)).to eq(2)
+        expect(result.count_for(:warning)).to eq(1)
+        expect(result.responses.size).to eq(3)
 
         response = result.response_for 1
-        response.type.should == SubmissionResult::Response::Type.ERROR.sym
-        response.code.should == 8560
+        expect(response.type).to eq(SubmissionResult::Response::Type.ERROR.sym)
+        expect(response.code).to eq(8560)
         response.description == 'Result description 1'
-        response.additional_info.should == {
+        expect(response.additional_info).to eq({
           sku: '3455449'
-        }
+        })
 
 
         response = result.response_for 2
-        response.type.should == SubmissionResult::Response::Type.ERROR.sym
-        response.code.should == 5000
+        expect(response.type).to eq(SubmissionResult::Response::Type.ERROR.sym)
+        expect(response.code).to eq(5000)
         response.description == 'Result description 2'
-        response.additional_info.should == {
+        expect(response.additional_info).to eq({
           sku: '8744969'
-        }
+        })
 
         response = result.response_for 3
-        response.type.should == SubmissionResult::Response::Type.WARNING.sym
-        response.code.should == 5001
+        expect(response.type).to eq(SubmissionResult::Response::Type.WARNING.sym)
+        expect(response.code).to eq(5001)
         response.description == 'Result description 3'
-        response.additional_info.should == {
+        expect(response.additional_info).to eq({
           sku: '7844970'
-        }
+        })
       end
 
     end
@@ -133,25 +133,25 @@ module Mws::Apis::Feeds
 
       it 'should be reflexive' do
         a = SubmissionResult.from_xml success_node
-        (a == a).should be true
+        expect(a == a).to be true
       end
 
       it 'should be symmetric' do
         a = SubmissionResult.from_xml success_node
         b = SubmissionResult.from_xml success_node
-        (a == b).should == (b == a)
+        expect(a == b).to eq(b == a)
       end
 
       it 'should be transitive' do
         a = SubmissionResult.from_xml success_node
         b = SubmissionResult.from_xml success_node
         c = SubmissionResult.from_xml success_node
-        (a == c).should == (a == b && b == c)
+        expect(a == c).to eq(a == b && b == c)
       end
 
       it 'should handle comparison to nil' do
         a = SubmissionResult.from_xml success_node
-        (a == nil).should be false
+        expect(a == nil).to be false
       end
 
     end

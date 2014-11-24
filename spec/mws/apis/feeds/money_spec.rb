@@ -8,14 +8,14 @@ module Mws::Apis::Feeds
 
       it 'should default to usd' do
         money = Money.new 40
-        money.amount.should == 40
-        money.currency.should == :usd
+        expect(money.amount).to eq(40)
+        expect(money.currency).to eq(:usd)
       end
 
       it 'should accept a valid currency override' do
         money = Money.new 0, :eur
-        money.amount.should == 0
-        money.currency.should == :eur
+        expect(money.amount).to eq(0)
+        expect(money.currency).to eq(:eur)
       end
 
       it 'should validate the currency override' do
@@ -33,7 +33,7 @@ module Mws::Apis::Feeds
         expected = Nokogiri::XML::Builder.new do
           Price '25.00', currency: 'CAD'
         end.doc.root.to_xml
-        money.to_xml.should == expected
+        expect(money.to_xml).to eq(expected)
       end
 
     end

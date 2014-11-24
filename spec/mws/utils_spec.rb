@@ -31,35 +31,35 @@ module Mws
     context '.camelize' do
 
       it 'should properly camelize nil' do
-        Utils.camelize(nil).should be nil
-        Utils.camelize(nil, false).should be nil
+        expect(Utils.camelize(nil)).to be nil
+        expect(Utils.camelize(nil, false)).to be nil
       end
 
       it 'should properly camelize the empty string' do
-        Utils.camelize('').should == ''
+        expect(Utils.camelize('')).to eq('')
         Utils.camelize('', false) == ''
       end
 
       it 'should trim whitespace from the string' do
-        Utils.camelize('   ').should == ''
+        expect(Utils.camelize('   ')).to eq('')
         Utils.camelize('   ', false) == ''
-        Utils.camelize('  foo_bar_baz    ').should == 'FooBarBaz'
-        Utils.camelize(' foo_bar_baz  ', false).should == 'fooBarBaz'
+        expect(Utils.camelize('  foo_bar_baz    ')).to eq('FooBarBaz')
+        expect(Utils.camelize(' foo_bar_baz  ', false)).to eq('fooBarBaz')
       end
 
       it 'should properly camelize single segment names' do
-        Utils.camelize('foo').should == 'Foo'
-        Utils.camelize('foo', false).should == 'foo'
+        expect(Utils.camelize('foo')).to eq('Foo')
+        expect(Utils.camelize('foo', false)).to eq('foo')
       end
 
       it 'should properly camelize multi-segment names' do
-        Utils.camelize('foo_bar_baz').should == 'FooBarBaz'
-        Utils.camelize('foo_bar_baz', false).should == 'fooBarBaz'
+        expect(Utils.camelize('foo_bar_baz')).to eq('FooBarBaz')
+        expect(Utils.camelize('foo_bar_baz', false)).to eq('fooBarBaz')
       end
 
       it 'should properly camelize mixed case multi-segment names' do
-        Utils.camelize('fOO_BAR_BAZ').should == 'FooBarBaz'
-        Utils.camelize('fOO_BAR_BAZ', false).should == 'fooBarBaz'
+        expect(Utils.camelize('fOO_BAR_BAZ')).to eq('FooBarBaz')
+        expect(Utils.camelize('fOO_BAR_BAZ', false)).to eq('fooBarBaz')
       end
 
     end
@@ -67,25 +67,25 @@ module Mws
     context '.underscore' do
 
       it 'should properly underscore nil' do
-        Utils.underscore(nil).should be nil
+        expect(Utils.underscore(nil)).to be nil
       end
 
       it 'should properly camelize the empty string' do
-        Utils.underscore('').should == ''
+        expect(Utils.underscore('')).to eq('')
       end
 
       it 'should trim whitespace from the string' do
-        Utils.underscore('   ').should == ''
-        Utils.underscore('  FooBarBaz    ').should == 'foo_bar_baz'
+        expect(Utils.underscore('   ')).to eq('')
+        expect(Utils.underscore('  FooBarBaz    ')).to eq('foo_bar_baz')
       end
 
       it 'should properly underscore single-segment names' do
-        Utils.underscore('Foo').should == 'foo'
-        Utils.underscore('foo').should == 'foo'
+        expect(Utils.underscore('Foo')).to eq('foo')
+        expect(Utils.underscore('foo')).to eq('foo')
       end
 
       it 'should properly underscore multi-segment names' do
-        Utils.underscore('FooBarBaz').should == 'foo_bar_baz'
+        expect(Utils.underscore('FooBarBaz')).to eq('foo_bar_baz')
       end
 
     end
@@ -118,7 +118,7 @@ module Mws
         '}' => '7D'
       }.each do | key, value |
         it "should properly escape '#{key}' as '%#{value}'" do
-          Utils.uri_escape("foo#{key}bar").should == "foo%#{value}bar"
+          expect(Utils.uri_escape("foo#{key}bar")).to eq("foo%#{value}bar")
         end
       end
 
@@ -131,13 +131,13 @@ module Mws
       end
 
       it 'should create aliases of the specified constants' do
-        Mws::Baz.should == Mws::Foo::Bar::Baz
-        Mws::Quk.should == Mws::Foo::Bar::Quk
+        expect(Mws::Baz).to eq(Mws::Foo::Bar::Baz)
+        expect(Mws::Quk).to eq(Mws::Foo::Bar::Quk)
       end
 
       it 'should create constructor shortcuts' do
-        Mws::Baz('quk').should be_a Mws::Foo::Bar::Baz
-        Mws::Quk('baz').should be_a Mws::Foo::Bar::Quk
+        expect(Mws::Baz('quk')).to be_a Mws::Foo::Bar::Baz
+        expect(Mws::Quk('baz')).to be_a Mws::Foo::Bar::Quk
       end
 
     end

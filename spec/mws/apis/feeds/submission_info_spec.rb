@@ -49,32 +49,32 @@ module Mws::Apis::Feeds
 
       it 'should be able to create an info object in a submitted state' do
         info = SubmissionInfo.from_xml submitted_node
-        info.id.should == "5868304010"
-        info.status.should == SubmissionInfo::Status.SUBMITTED.sym
-        info.type.should == Feed::Type.PRODUCT.sym
-        info.submitted.should == Time.parse('2012-10-16T21:19:08+00:00')
-        info.started.should be_nil
-        info.completed.should be_nil
+        expect(info.id).to eq("5868304010")
+        expect(info.status).to eq(SubmissionInfo::Status.SUBMITTED.sym)
+        expect(info.type).to eq(Feed::Type.PRODUCT.sym)
+        expect(info.submitted).to eq(Time.parse('2012-10-16T21:19:08+00:00'))
+        expect(info.started).to be_nil
+        expect(info.completed).to be_nil
       end
 
       it 'should be able to create an info object in and in progress state' do
         info = SubmissionInfo.from_xml in_progress_node
-        info.id.should == "5868304010"
-        info.status.should == SubmissionInfo::Status.IN_PROGRESS.sym
-        info.type.should == Feed::Type.PRODUCT.sym
-        info.submitted.should == Time.parse('2012-10-16T21:19:08+00:00')
-        info.started.should == Time.parse('2012-10-16T21:21:35+00:00')
-        info.completed.should be_nil
+        expect(info.id).to eq("5868304010")
+        expect(info.status).to eq(SubmissionInfo::Status.IN_PROGRESS.sym)
+        expect(info.type).to eq(Feed::Type.PRODUCT.sym)
+        expect(info.submitted).to eq(Time.parse('2012-10-16T21:19:08+00:00'))
+        expect(info.started).to eq(Time.parse('2012-10-16T21:21:35+00:00'))
+        expect(info.completed).to be_nil
       end
 
       it 'should be able to create an info object in a done state' do
         info = SubmissionInfo.from_xml done_node
-        info.id.should == "5868304010"
-        info.status.should == SubmissionInfo::Status.DONE.sym
-        info.type.should == Feed::Type.PRODUCT.sym
-        info.submitted.should == Time.parse('2012-10-16T21:19:08+00:00')
-        info.started.should == Time.parse('2012-10-16T21:21:35+00:00')
-        info.completed.should == Time.parse('2012-10-16T21:23:40+00:00')
+        expect(info.id).to eq("5868304010")
+        expect(info.status).to eq(SubmissionInfo::Status.DONE.sym)
+        expect(info.type).to eq(Feed::Type.PRODUCT.sym)
+        expect(info.submitted).to eq(Time.parse('2012-10-16T21:19:08+00:00'))
+        expect(info.started).to eq(Time.parse('2012-10-16T21:21:35+00:00'))
+        expect(info.completed).to eq(Time.parse('2012-10-16T21:23:40+00:00'))
       end
 
     end
@@ -83,25 +83,25 @@ module Mws::Apis::Feeds
 
       it 'should be reflexive' do
         a = SubmissionInfo.from_xml submitted_node
-        (a == a).should be true
+        expect(a == a).to be true
       end
 
       it 'should be symmetric' do
         a = SubmissionInfo.from_xml submitted_node
         b = SubmissionInfo.from_xml submitted_node
-        (a == b).should == (b == a)
+        expect(a == b).to eq(b == a)
       end
 
       it 'should be transitive' do
         a = SubmissionInfo.from_xml submitted_node
         b = SubmissionInfo.from_xml submitted_node
         c = SubmissionInfo.from_xml submitted_node
-        (a == c).should == (a == b && b == c)
+        expect(a == c).to eq(a == b && b == c)
       end
 
       it 'should handle comparison to nil' do
         a = SubmissionInfo.from_xml submitted_node
-        (a == nil).should be false
+        expect(a == nil).to be false
       end
 
     end

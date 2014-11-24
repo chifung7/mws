@@ -8,22 +8,22 @@ module Mws::Apis::Feeds
 
       it 'should be able to construct a price with only sku and base price' do
         price = PriceListing.new('987612345', 14.99)
-        price.sku.should == '987612345'
-        price.currency.should == :usd
-        price.base.should == Money.new(14.99, :usd)
-        price.min.should be nil
-        price.sale.should be nil
+        expect(price.sku).to eq('987612345')
+        expect(price.currency).to eq(:usd)
+        expect(price.base).to eq(Money.new(14.99, :usd))
+        expect(price.min).to be nil
+        expect(price.sale).to be nil
       end
 
       it 'should be able to construct a price with custom currency code' do
         price = PriceListing.new('9876123456', 14.99, currency: :eur)
-        price.currency.should == :eur
-        price.base.should == Money.new(14.99, :eur)
+        expect(price.currency).to eq(:eur)
+        expect(price.base).to eq(Money.new(14.99, :eur))
       end
 
       it 'should be able to construct a price with custom minimum advertised price' do
         price = PriceListing.new('987612345', 14.99, min: 11.99)
-        price.min.should == Money.new(11.99, :usd)
+        expect(price.min).to eq(Money.new(11.99, :usd))
       end
 
       it 'should be able to construct a new price with custom sale price' do
@@ -34,7 +34,7 @@ module Mws::Apis::Feeds
           from: from,
           to: to
         })
-        price.sale.should == SalePrice.new(Money.new(12.99, :usd), from, to)
+        expect(price.sale).to eq(SalePrice.new(Money.new(12.99, :usd), from, to))
       end
 
       it 'should validate that the base price is less than the minimum advertised price' do
@@ -57,7 +57,7 @@ module Mws::Apis::Feeds
         from = 1.day.ago
         to = 4.months.from_now
         price = PriceListing.new('987612345', 14.99).on_sale(12.99, from, to)
-        price.sale.should == SalePrice.new(Money.new(12.99, :usd)  , from, to)
+        expect(price.sale).to eq(SalePrice.new(Money.new(12.99, :usd)  , from, to))
       end
 
     end
@@ -80,7 +80,7 @@ module Mws::Apis::Feeds
             }
           }
         end.doc.root.to_xml
-        price.to_xml.should == expected
+        expect(price.to_xml).to eq(expected)
       end
 
     end

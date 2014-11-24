@@ -27,7 +27,7 @@ module Mws
 
       it 'should construct a pseudo-constant accessor for each provided symbol' do
         options.each do | key, value |
-          OrderStatus.send(key.to_s.upcase.to_sym).should_not be nil
+          expect(OrderStatus.send(key.to_s.upcase.to_sym)).not_to be nil
         end
       end
 
@@ -36,7 +36,7 @@ module Mws
         EnumTwo = Enum.for( bar: 'BAR', baz: 'BAZ', quk: 'QUK' )
         expect { EnumOne.QUK }.to raise_error NoMethodError
         expect { EnumTwo.FOO }.to raise_error NoMethodError
-        EnumOne.BAR.should_not == EnumTwo.BAR
+        expect(EnumOne.BAR).not_to eq(EnumTwo.BAR)
       end
 
     end
@@ -60,16 +60,16 @@ module Mws
 
       it 'should synthesize a attr_reader that exposes an enum entry as a symbol' do
         it = HasEnumAttrs.new(:foo, :quk)
-        it.send(:instance_variable_get, '@one').should == HasEnumAttrs::EnumOne.FOO
-        it.one.should == :foo
-        it.send(:instance_variable_get, '@two').should == HasEnumAttrs::EnumTwo.QUK
-        it.two.should == :quk
+        expect(it.send(:instance_variable_get, '@one')).to eq(HasEnumAttrs::EnumOne.FOO)
+        expect(it.one).to eq(:foo)
+        expect(it.send(:instance_variable_get, '@two')).to eq(HasEnumAttrs::EnumTwo.QUK)
+        expect(it.two).to eq(:quk)
       end
 
       it 'should synthesize attr_readers that are null safe' do
         it = HasEnumAttrs.new(:quk, :foo)
-        it.one.should be nil
-        it.two.should be nil
+        expect(it.one).to be nil
+        expect(it.two).to be nil
       end
 
     end
@@ -77,15 +77,15 @@ module Mws
     context '#for' do
 
       it 'should be able to find an enum entry from a symbol' do
-        OrderStatus.for(:pending).should == OrderStatus.PENDING
+        expect(OrderStatus.for(:pending)).to eq(OrderStatus.PENDING)
       end
 
       it 'should be able to find an enum entry from a string' do
-        OrderStatus.for('Pending').should == OrderStatus.PENDING
+        expect(OrderStatus.for('Pending')).to eq(OrderStatus.PENDING)
       end
 
       it 'should be able to find an enum entry from an enum entry' do
-        OrderStatus.for(OrderStatus.PENDING).should == OrderStatus.PENDING
+        expect(OrderStatus.for(OrderStatus.PENDING)).to eq(OrderStatus.PENDING)
       end
       
     end
@@ -93,20 +93,20 @@ module Mws
     context '#sym' do
 
       it 'should return nil for nil value' do
-        OrderStatus.sym(nil).should be nil
+        expect(OrderStatus.sym(nil)).to be nil
       end
 
       it 'should return nil for an unknown value' do
-        OrderStatus.sym('UnknownValue').should be nil
+        expect(OrderStatus.sym('UnknownValue')).to be nil
       end
 
       it 'should provide the symbol for a given value' do
-        OrderStatus.sym('Pending').should == :pending
-        OrderStatus.sym('Unshipped').should == :unshipped
-        OrderStatus.sym('PartiallyShipped').should == :unshipped
-        OrderStatus.sym('Shipped').should == :shipped
-        OrderStatus.sym('Cancelled').should == :cancelled
-        OrderStatus.sym('Unfulfillable').should == :unfulfillable
+        expect(OrderStatus.sym('Pending')).to eq(:pending)
+        expect(OrderStatus.sym('Unshipped')).to eq(:unshipped)
+        expect(OrderStatus.sym('PartiallyShipped')).to eq(:unshipped)
+        expect(OrderStatus.sym('Shipped')).to eq(:shipped)
+        expect(OrderStatus.sym('Cancelled')).to eq(:cancelled)
+        expect(OrderStatus.sym('Unfulfillable')).to eq(:unfulfillable)
       end
 
     end
@@ -114,19 +114,19 @@ module Mws
     context '#val' do
 
       it 'should return nil for nil symbol' do
-        OrderStatus.val(nil).should be nil
+        expect(OrderStatus.val(nil)).to be nil
       end
 
       it 'should return nil for an unknown sumbol' do
-        OrderStatus.val(:unknown).should be nil
+        expect(OrderStatus.val(:unknown)).to be nil
       end
 
       it 'should provide the value for a given symbol' do
-        OrderStatus.val(:pending).should == 'Pending'
-        OrderStatus.val(:unshipped).should == [ 'Unshipped', 'PartiallyShipped' ]
-        OrderStatus.val(:shipped).should == 'Shipped'
-        OrderStatus.val(:cancelled).should == 'Cancelled'
-        OrderStatus.val(:unfulfillable).should == 'Unfulfillable'
+        expect(OrderStatus.val(:pending)).to eq('Pending')
+        expect(OrderStatus.val(:unshipped)).to eq([ 'Unshipped', 'PartiallyShipped' ])
+        expect(OrderStatus.val(:shipped)).to eq('Shipped')
+        expect(OrderStatus.val(:cancelled)).to eq('Cancelled')
+        expect(OrderStatus.val(:unfulfillable)).to eq('Unfulfillable')
       end
 
     end
@@ -134,7 +134,7 @@ module Mws
     context '#syms' do
 
       it 'should provide the set of symbols' do
-        OrderStatus.syms.should == options.keys
+        expect(OrderStatus.syms).to eq(options.keys)
       end
 
     end
@@ -142,23 +142,23 @@ module Mws
     context '#vals' do
 
       it 'should provide the list of values' do
-        OrderStatus.vals.should == options.values.flatten
+        expect(OrderStatus.vals).to eq(options.values.flatten)
       end
 
     end
 
     it 'should be able to provide a symbol for an entry' do
-      OrderStatus.PENDING.sym.should == :pending
+      expect(OrderStatus.PENDING.sym).to eq(:pending)
     end
 
     it 'should be able to provide a value for an enum entry' do
-      OrderStatus.PENDING.val.should == 'Pending'
+      expect(OrderStatus.PENDING.val).to eq('Pending')
     end
 
     it 'should be able to handle multivalued enum entries' do
-      OrderStatus.for(:unshipped).should == OrderStatus.UNSHIPPED
-      OrderStatus.for('Unshipped').should == OrderStatus.UNSHIPPED
-      OrderStatus.for('PartiallyShipped').should == OrderStatus.UNSHIPPED
+      expect(OrderStatus.for(:unshipped)).to eq(OrderStatus.UNSHIPPED)
+      expect(OrderStatus.for('Unshipped')).to eq(OrderStatus.UNSHIPPED)
+      expect(OrderStatus.for('PartiallyShipped')).to eq(OrderStatus.UNSHIPPED)
     end
     
   end

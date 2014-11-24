@@ -8,14 +8,14 @@ module Mws::Apis::Feeds
 
       it 'should default to pounds' do
         weight = Weight.new 40
-        weight.amount.should == 40
-        weight.unit.should == :pounds
+        expect(weight.amount).to eq(40)
+        expect(weight.unit).to eq(:pounds)
       end
 
       it 'should accept a valid unit override' do
         weight = Weight.new 0, :ounces
-        weight.amount.should == 0
-        weight.unit.should == :ounces
+        expect(weight.amount).to eq(0)
+        expect(weight.unit).to eq(:ounces)
       end
 
       it 'should validate the unit override' do
@@ -33,7 +33,7 @@ module Mws::Apis::Feeds
         expected = Nokogiri::XML::Builder.new do
           Weight 25, unitOfMeasure: 'GR'
         end.doc.root.to_xml
-        weight.to_xml.should == expected
+        expect(weight.to_xml).to eq(expected)
       end
 
     end

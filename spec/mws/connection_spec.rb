@@ -25,19 +25,19 @@ module Mws
     context '.new' do
 
       it 'should default scheme to https' do
-        connection.scheme.should == 'https'
+        expect(connection.scheme).to eq('https')
       end
 
       it 'should accept a custom scheme' do
-        Connection.new(defaults.merge(scheme: 'http')).scheme.should == 'http'
+        expect(Connection.new(defaults.merge(scheme: 'http')).scheme).to eq('http')
       end
 
       it 'should default host to mws.amazonservices.com' do
-        connection.host.should == 'mws.amazonservices.com'
+        expect(connection.host).to eq('mws.amazonservices.com')
       end
 
       it 'should accept a custom host' do
-        Connection.new(defaults.merge(host: 'mws.amazonservices.uk')).host.should == 'mws.amazonservices.uk'
+        expect(Connection.new(defaults.merge(host: 'mws.amazonservices.uk')).host).to eq('mws.amazonservices.uk')
       end
 
       it 'should require a merchant identifier' do
@@ -50,7 +50,7 @@ module Mws
       end
 
       it 'should accept a merchant identifier' do
-        connection.merchant.should == 'GSWCJ4UBA31UTJ'
+        expect(connection.merchant).to eq('GSWCJ4UBA31UTJ')
       end
 
       it 'should require an access key' do
@@ -63,7 +63,7 @@ module Mws
       end
 
       it 'should accept an access key' do
-        connection.access.should == 'AYQAKIAJSCWMLYXAQ6K3'
+        expect(connection.access).to eq('AYQAKIAJSCWMLYXAQ6K3')
       end
 
       it 'should require a secret key' do
@@ -76,7 +76,7 @@ module Mws
       end
 
       it 'should accept a secret key' do
-        connection.secret.should == 'Ubzq/NskSrW4m5ncq53kddzBej7O7IE5Yx9drGrX'
+        expect(connection.secret).to eq('Ubzq/NskSrW4m5ncq53kddzBej7O7IE5Yx9drGrX')
       end
 
     end
@@ -84,7 +84,7 @@ module Mws
     context '#get' do
 
       it 'should appropriately delegate to #request' do
-        connection.should_receive(:request).with(:get, '/foo', { market: 'ATVPDKIKX0DER' }, nil, { version: 1 })
+        expect(connection).to receive(:request).with(:get, '/foo', { market: 'ATVPDKIKX0DER' }, nil, { version: 1 })
         connection.get('/foo', { market: 'ATVPDKIKX0DER' }, { version: 1 })
       end
 
@@ -93,7 +93,7 @@ module Mws
     context '#post' do
 
       it 'should appropriately delegate to #request' do
-        connection.should_receive(:request).with(:post, '/foo', { market: 'ATVPDKIKX0DER' }, 'test_body', { version: 1 })
+        expect(connection).to receive(:request).with(:post, '/foo', { market: 'ATVPDKIKX0DER' }, 'test_body', { version: 1 })
         connection.post('/foo', { market: 'ATVPDKIKX0DER' }, 'test_body', { version: 1 })
       end
 
@@ -102,7 +102,7 @@ module Mws
     context '#request' do
 
       it 'should construct a query, signer and make the request' do
-        Query.should_receive(:new).with(
+        expect(Query).to receive(:new).with(
           action: nil, 
           version: nil, 
           merchant: 'GSWCJ4UBA31UTJ', 
@@ -110,15 +110,15 @@ module Mws
           list_pattern: nil
         ).and_return('the_query')
         signer = double('signer')
-        Signer.should_receive(:new).with(
+        expect(Signer).to receive(:new).with(
           method: :get,
           host: 'mws.amazonservices.com',
           path: '/foo',
           secret: 'Ubzq/NskSrW4m5ncq53kddzBej7O7IE5Yx9drGrX'
         ).and_return(signer)
-        signer.should_receive(:sign).with('the_query').and_return('the_signed_query')
-        connection.should_receive(:response_for).with(:get, '/foo', 'the_signed_query', nil).and_return('the_response')
-        connection.should_receive(:parse).with('the_response', {})
+        expect(signer).to receive(:sign).with('the_query').and_return('the_signed_query')
+        expect(connection).to receive(:response_for).with(:get, '/foo', 'the_signed_query', nil).and_return('the_response')
+        expect(connection).to receive(:parse).with('the_response', {})
         connection.request(:get, '/foo', {}, nil, {})
       end
 
@@ -128,7 +128,7 @@ module Mws
           access: 'AYQAKIAJSCWMLYXAQ6K3',
           secret: 'Ubzq/NskSrW4m5ncq53kddzBej7O7IE5Yx9drGrX'
         )
-        Query.should_receive(:new).with(
+        expect(Query).to receive(:new).with(
           action: nil, 
           version: nil, 
           merchant: 'GSWCJ4UBA31UTJ', 
@@ -138,20 +138,20 @@ module Mws
           baz: 'quk'
         ).and_return('the_query')
         signer = double('signer')
-        Signer.should_receive(:new).with(
+        expect(Signer).to receive(:new).with(
           method: :get,
           host: 'mws.amazonservices.com',
           path: '/foo',
           secret: 'Ubzq/NskSrW4m5ncq53kddzBej7O7IE5Yx9drGrX'
         ).and_return(signer)
-        signer.should_receive(:sign).with('the_query').and_return('the_signed_query')
-        connection.should_receive(:response_for).with(:get, '/foo', 'the_signed_query', nil).and_return('the_response')
-        connection.should_receive(:parse).with('the_response', {})
+        expect(signer).to receive(:sign).with('the_query').and_return('the_signed_query')
+        expect(connection).to receive(:response_for).with(:get, '/foo', 'the_signed_query', nil).and_return('the_response')
+        expect(connection).to receive(:parse).with('the_response', {})
         connection.request(:get, '/foo', { foo: 'bar', baz: 'quk' }, nil, {})
       end
 
       it 'should accept overrides to action, version and list_pattern' do
-        Query.should_receive(:new).with(
+        expect(Query).to receive(:new).with(
           action: 'SubmitFeed', 
           version: '2009-01-01', 
           merchant: 'GSWCJ4UBA31UTJ', 
@@ -159,15 +159,15 @@ module Mws
           list_pattern: 'a_list_pattern'
         ).and_return('the_query')
         signer = double('signer')
-        Signer.should_receive(:new).with(
+        expect(Signer).to receive(:new).with(
           method: :get,
           host: 'mws.amazonservices.com',
           path: '/foo',
           secret: 'Ubzq/NskSrW4m5ncq53kddzBej7O7IE5Yx9drGrX'
         ).and_return(signer)
-        signer.should_receive(:sign).with('the_query').and_return('the_signed_query')
-        connection.should_receive(:response_for).with(:get, '/foo', 'the_signed_query', nil).and_return('the_response')
-        connection.should_receive(:parse).with('the_response', { action: 'SubmitFeed', version: '2009-01-01' })
+        expect(signer).to receive(:sign).with('the_query').and_return('the_signed_query')
+        expect(connection).to receive(:response_for).with(:get, '/foo', 'the_signed_query', nil).and_return('the_response')
+        expect(connection).to receive(:parse).with('the_response', { action: 'SubmitFeed', version: '2009-01-01' })
         connection.request(:get, '/foo', {}, nil, { action: 'SubmitFeed', version: '2009-01-01', list_pattern: 'a_list_pattern' })
       end
 
@@ -188,11 +188,11 @@ module Mws
         </ErrorResponse>
         XML
         expect { connection.parse(body, {}) }.to raise_error do | error | 
-          error.should be_a Errors::ServerError
-          error.type.should == 'Sender'
-          error.code.should == 'InvalidParameterValue'
-          error.message.should == 'CreatedAfter or LastUpdatedAfter must be specified'
-          error.details.should == 'None'
+          expect(error).to be_a Errors::ServerError
+          expect(error.type).to eq('Sender')
+          expect(error.code).to eq('InvalidParameterValue')
+          expect(error.message).to eq('CreatedAfter or LastUpdatedAfter must be specified')
+          expect(error.details).to eq('None')
         end
       end
 
@@ -209,7 +209,7 @@ module Mws
           </ResponseMetadata>
         </ListOrdersResponse>
         XML
-        result = connection.parse(body, action: 'ListOrders').name.should == 'ListOrdersResult'
+        result = expect(connection.parse(body, action: 'ListOrders').name).to eq('ListOrdersResult')
       end
 
       it 'shoudl parse result base on custom xpath' do
@@ -225,7 +225,7 @@ module Mws
           </ResponseMetadata>
         </ListOrdersResponse>
         XML
-        result = connection.parse(body, xpath: '/ListOrdersResponse/ListOrdersResult').name.should == 'ListOrdersResult'
+        result = expect(connection.parse(body, xpath: '/ListOrdersResponse/ListOrdersResult').name).to eq('ListOrdersResult')
       end
 
     end
@@ -234,94 +234,94 @@ module Mws
 
       it 'should properly handle a secure get request' do
         response = double(:response)
-        response.should_receive(:body).exactly(3).times.and_return('response_body')
+        expect(response).to receive(:body).exactly(3).times.and_return('response_body')
         http = double(:http)
-        http.should_receive(:request) do | req |
-          req.should be_a Net::HTTP::Get
-          req.method.should == 'GET'
-          req.path.should == '/?foo=bar'
-          req['User-Agent'].should == 'MWS Connect/0.0.1 (Language=Ruby)'
-          req['Accept-Encoding'].should == 'text/xml'
+        expect(http).to receive(:request) do | req |
+          expect(req).to be_a Net::HTTP::Get
+          expect(req.method).to eq('GET')
+          expect(req.path).to eq('/?foo=bar')
+          expect(req['User-Agent']).to eq('MWS Connect/0.0.1 (Language=Ruby)')
+          expect(req['Accept-Encoding']).to eq('text/xml')
           response
         end
-        Net::HTTP.should_receive(:start).with('mws.amazonservices.com', 443, use_ssl: true).and_yield(http)
-        connection.response_for(:get, '/', 'foo=bar', nil).should == 'response_body'
+        expect(Net::HTTP).to receive(:start).with('mws.amazonservices.com', 443, use_ssl: true).and_yield(http)
+        expect(connection.response_for(:get, '/', 'foo=bar', nil)).to eq('response_body')
       end
 
       it 'should properly handle an insecure get request' do
         connection = Connection.new(defaults.merge(scheme: 'http'))
         response = double(:response)
-        response.should_receive(:body).exactly(3).times.and_return('response_body')
+        expect(response).to receive(:body).exactly(3).times.and_return('response_body')
         http = double(:http)
-        http.should_receive(:request) do | req |
-          req.should be_a Net::HTTP::Get
-          req.method.should == 'GET'
-          req.path.should == '/?foo=bar'
-          req['User-Agent'].should == 'MWS Connect/0.0.1 (Language=Ruby)'
-          req['Accept-Encoding'].should == 'text/xml'
+        expect(http).to receive(:request) do | req |
+          expect(req).to be_a Net::HTTP::Get
+          expect(req.method).to eq('GET')
+          expect(req.path).to eq('/?foo=bar')
+          expect(req['User-Agent']).to eq('MWS Connect/0.0.1 (Language=Ruby)')
+          expect(req['Accept-Encoding']).to eq('text/xml')
           response
         end
-        Net::HTTP.should_receive(:start).with('mws.amazonservices.com', 80, use_ssl: false).and_yield(http)
-        connection.response_for(:get, '/', 'foo=bar', nil).should == 'response_body'
+        expect(Net::HTTP).to receive(:start).with('mws.amazonservices.com', 80, use_ssl: false).and_yield(http)
+        expect(connection.response_for(:get, '/', 'foo=bar', nil)).to eq('response_body')
       end
 
       it 'should properly handle requests with transport level errors' do
         response = double(:response)
-        response.should_receive(:body).and_return(nil)
-        response.should_receive(:code).and_return(500)
-        response.should_receive(:msg).and_return('Internal Server Error')
+        expect(response).to receive(:body).and_return(nil)
+        expect(response).to receive(:code).and_return(500)
+        expect(response).to receive(:msg).and_return('Internal Server Error')
         http = double(:http)
-        http.should_receive(:request) do | req |
-          req.should be_a Net::HTTP::Get
-          req.method.should == 'GET'
-          req.path.should == '/?foo=bar'
-          req['User-Agent'].should == 'MWS Connect/0.0.1 (Language=Ruby)'
-          req['Accept-Encoding'].should == 'text/xml'
+        expect(http).to receive(:request) do | req |
+          expect(req).to be_a Net::HTTP::Get
+          expect(req.method).to eq('GET')
+          expect(req.path).to eq('/?foo=bar')
+          expect(req['User-Agent']).to eq('MWS Connect/0.0.1 (Language=Ruby)')
+          expect(req['Accept-Encoding']).to eq('text/xml')
           response
         end
-        Net::HTTP.should_receive(:start).with('mws.amazonservices.com', 443, use_ssl: true).and_yield(http)
+        expect(Net::HTTP).to receive(:start).with('mws.amazonservices.com', 443, use_ssl: true).and_yield(http)
         expect { connection.response_for(:get, '/', 'foo=bar', nil) }.to raise_error do | error |
-          error.should be_a Errors::ServerError
-          error.type.should == 'Server'
-          error.code.should == 500
-          error.message.should == 'Internal Server Error'
-          error.detail.should == 'None'
+          expect(error).to be_a Errors::ServerError
+          expect(error.type).to eq('Server')
+          expect(error.code).to eq(500)
+          expect(error.message).to eq('Internal Server Error')
+          expect(error.detail).to eq('None')
         end
       end
 
       it 'should properly handle a post without a body' do
         response = double(:response)
-        response.should_receive(:body).exactly(3).times.and_return('response_body')
+        expect(response).to receive(:body).exactly(3).times.and_return('response_body')
         http = double(:http)
-        http.should_receive(:request) do | req |
-          req.should be_a Net::HTTP::Post
-          req.method.should == 'POST'
-          req.path.should == '/?foo=bar'
-          req['User-Agent'].should == 'MWS Connect/0.0.1 (Language=Ruby)'
-          req['Accept-Encoding'].should == 'text/xml'
+        expect(http).to receive(:request) do | req |
+          expect(req).to be_a Net::HTTP::Post
+          expect(req.method).to eq('POST')
+          expect(req.path).to eq('/?foo=bar')
+          expect(req['User-Agent']).to eq('MWS Connect/0.0.1 (Language=Ruby)')
+          expect(req['Accept-Encoding']).to eq('text/xml')
           response
         end
-        Net::HTTP.should_receive(:start).with('mws.amazonservices.com', 443, use_ssl: true).and_yield(http)
-        connection.response_for(:post, '/', 'foo=bar', nil).should == 'response_body'
+        expect(Net::HTTP).to receive(:start).with('mws.amazonservices.com', 443, use_ssl: true).and_yield(http)
+        expect(connection.response_for(:post, '/', 'foo=bar', nil)).to eq('response_body')
       end
 
       it 'should properly handle a post with a body' do
         response = double(:response)
-        response.should_receive(:body).exactly(3).times.and_return('response_body')
+        expect(response).to receive(:body).exactly(3).times.and_return('response_body')
         http = double(:http)
-        http.should_receive(:request) do | req |
-          req.should be_a Net::HTTP::Post
-          req.method.should == 'POST'
-          req.path.should == '/?foo=bar'
-          req.content_type.should == 'text/xml'
-          req.body.should == 'request_body'
+        expect(http).to receive(:request) do | req |
+          expect(req).to be_a Net::HTTP::Post
+          expect(req.method).to eq('POST')
+          expect(req.path).to eq('/?foo=bar')
+          expect(req.content_type).to eq('text/xml')
+          expect(req.body).to eq('request_body')
           req['Content-MD5'] = Digest::MD5.base64digest('request_body').strip
-          req['User-Agent'].should == 'MWS Connect/0.0.1 (Language=Ruby)'
-          req['Accept-Encoding'].should == 'text/xml'
+          expect(req['User-Agent']).to eq('MWS Connect/0.0.1 (Language=Ruby)')
+          expect(req['Accept-Encoding']).to eq('text/xml')
           response
         end
-        Net::HTTP.should_receive(:start).with('mws.amazonservices.com', 443, use_ssl: true).and_yield(http)
-        connection.response_for(:post, '/', 'foo=bar', 'request_body').should == 'response_body'
+        expect(Net::HTTP).to receive(:start).with('mws.amazonservices.com', 443, use_ssl: true).and_yield(http)
+        expect(connection.response_for(:post, '/', 'foo=bar', 'request_body')).to eq('response_body')
       end
 
     end

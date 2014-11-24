@@ -24,7 +24,7 @@ module Mws
           xml.EndDate to.iso8601
           xml.SalePrice sale_price, currency: 'USD'
         end
-        actual.should == expected
+        expect(actual).to eq(expected)
       end
 
       it 'should properly serialize with a parent' do
@@ -51,7 +51,7 @@ module Mws
             end
           }
         }.to_xml
-        actual.should == expected
+        expect(actual).to eq(expected)
       end
 
     end
@@ -63,7 +63,7 @@ module Mws
           SalePrice sale_price, currency: 'USD'
         }.doc.root.to_xml
         actual = Serializer.leaf 'SalePrice', nil, sale_price, currency: 'USD'
-        actual.should == expected
+        expect(actual).to eq(expected)
       end
 
       it 'should properly serialize with a parent' do
@@ -81,7 +81,7 @@ module Mws
             Serializer.leaf 'SalePrice', self, sale_price, currency: 'USD'
           }
         }.to_xml
-        actual.should == expected
+        expect(actual).to eq(expected)
       end
 
     end
@@ -120,7 +120,7 @@ module Mws
         }.to_xml
         actual = Nokogiri::XML::Builder.new
         Serializer.new.xml_for('Data', data, actual)
-        actual.to_xml.should == expected
+        expect(actual.to_xml).to eq(expected)
       end
 
       it 'should work with exceptions' do
@@ -139,7 +139,7 @@ module Mws
         }.to_xml
         actual = Nokogiri::XML::Builder.new
         Serializer.new(foo: 'FOO', baz: 'BaZ').xml_for('Data', data, actual)
-        actual.to_xml.should == expected
+        expect(actual.to_xml).to eq(expected)
       end
 
     end
@@ -177,7 +177,7 @@ module Mws
           price: regular_price.to_s
         }
         actual = Serializer.new(foo: 'FOO', baz: 'BaZ').hash_for(xml, nil)
-        actual.should == expected
+        expect(actual).to eq(expected)
       end
 
     end

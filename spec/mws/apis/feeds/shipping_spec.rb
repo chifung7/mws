@@ -22,20 +22,20 @@ module Mws::Apis::Feeds
       end
 
       it 'should accept a valid value for sku' do
-        Shipping.new('987612345').sku.should == '987612345'
+        expect(Shipping.new('987612345').sku).to eq('987612345')
       end
 
       it 'should accept a block to associate shipping option overrides' do
         shipping = Shipping.new('987612345') do
           replace 4.99, :usd, :continental_us, :standard, :street
         end
-        shipping.sku.should == '987612345'
-        shipping.options.size.should == 1
+        expect(shipping.sku).to eq('987612345')
+        expect(shipping.options.size).to eq(1)
         override = shipping.options.first
-        override.amount.should == Money.new(4.99, :usd)
-        override.option.region.should == :continental_us
-        override.option.speed.should == :standard
-        override.option.variant.should == :street
+        expect(override.amount).to eq(Money.new(4.99, :usd))
+        expect(override.option.region).to eq(:continental_us)
+        expect(override.option.speed).to eq(:standard)
+        expect(override.option.variant).to eq(:street)
       end
 
     end

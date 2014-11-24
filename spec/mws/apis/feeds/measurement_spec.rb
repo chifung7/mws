@@ -22,14 +22,14 @@ module Mws::Apis::Feeds
 
       it 'should default to fahrenheit' do
         temp = Temperature.new 40
-        temp.amount.should == 40
-        temp.unit.should == :fahrenheit
+        expect(temp.amount).to eq(40)
+        expect(temp.unit).to eq(:fahrenheit)
       end
 
       it 'should accept a valid unit override' do
         temp = Temperature.new 0, :kelvin
-        temp.amount.should == 0
-        temp.unit.should == :kelvin
+        expect(temp.amount).to eq(0)
+        expect(temp.unit).to eq(:kelvin)
       end
 
       it 'should validate the unit override' do
@@ -44,25 +44,25 @@ module Mws::Apis::Feeds
 
       it 'should be reflexive' do
         a = Temperature.new 25, :celcius
-        (a == a).should be true
+        expect(a == a).to be true
       end
 
       it 'should be symmetric' do
         a = Temperature.new 25, :celcius
         b = Temperature.new 25, :celcius
-        (a == b).should == (b == a)
+        expect(a == b).to eq(b == a)
       end
 
       it 'should be transitive' do
         a = Temperature.new 25, :celcius
         b = Temperature.new 25, :celcius
         c = Temperature.new 25, :celcius
-        (a == c).should == (a == b && b == c)
+        expect(a == c).to eq(a == b && b == c)
       end
 
       it 'should handle comparison to nil' do
         a = Temperature.new 25, :celcius
-        (a == nil).should be false
+        expect(a == nil).to be false
       end
 
     end
@@ -74,7 +74,7 @@ module Mws::Apis::Feeds
         expected = Nokogiri::XML::Builder.new do
           Temperature 25, unitOfMeasure: 'Celcius'
         end.doc.root.to_xml
-        temp.to_xml.should == expected
+        expect(temp.to_xml).to eq(expected)
       end
 
     end

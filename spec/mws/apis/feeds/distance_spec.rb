@@ -8,14 +8,14 @@ module Mws::Apis::Feeds
 
       it 'should default to feet' do
         distance = Distance.new 40
-        distance.amount.should == 40
-        distance.unit.should == :feet
+        expect(distance.amount).to eq(40)
+        expect(distance.unit).to eq(:feet)
       end
 
       it 'should accept a valid unit override' do
         distance = Distance.new 0, :meters
-        distance.amount.should == 0
-        distance.unit.should == :meters
+        expect(distance.amount).to eq(0)
+        expect(distance.unit).to eq(:meters)
       end
 
       it 'should validate the unit override' do
@@ -33,7 +33,7 @@ module Mws::Apis::Feeds
         expected = Nokogiri::XML::Builder.new do
           Distance 25, unitOfMeasure: 'inches'
         end.doc.root.to_xml
-        distance.to_xml.should == expected
+        expect(distance.to_xml).to eq(expected)
       end
 
     end

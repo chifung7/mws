@@ -12,16 +12,16 @@ module Mws::Apis::Feeds
     context '.new' do
 
       it 'should construct an image listing with url and type' do
-        listing.sku.should == sku
-        listing.url.should == url
-        listing.type.should == type
+        expect(listing.sku).to eq(sku)
+        expect(listing.url).to eq(url)
+        expect(listing.type).to eq(type)
       end
 
       it 'should default the image listing type to main' do
         listing = ImageListing.new sku, url
-        listing.sku.should == sku
-        listing.url.should == url
-        listing.type.should == :main
+        expect(listing.sku).to eq(sku)
+        expect(listing.url).to eq(url)
+        expect(listing.type).to eq(:main)
       end
 
       it 'should require non-nil sku' do
@@ -64,26 +64,26 @@ module Mws::Apis::Feeds
     context '#==' do
 
       it 'should be reflexive' do
-        (listing == listing).should be true
+        expect(listing == listing).to be true
       end
 
       it 'should be symmetric' do
         a = listing
         b = ImageListing.new(sku, url, type)
         c = ImageListing.new(sku, url)
-        (a == b).should == (b == a)
-        (a == c).should == (c == a)
+        expect(a == b).to eq(b == a)
+        expect(a == c).to eq(c == a)
       end
 
       it 'should be transitive' do
         a = listing
         b = ImageListing.new(sku, url, type)
         c = ImageListing.new(sku, url, type)
-        (a == c).should == (a == b && b == c)
+        expect(a == c).to eq(a == b && b == c)
       end
 
       it 'should handle comparison to nil' do
-        (listing == nil).should be false
+        expect(listing == nil).to be false
       end
 
     end
@@ -99,7 +99,7 @@ module Mws::Apis::Feeds
           }
         }.doc.root.to_xml
         actual = listing.to_xml
-        actual.should == expected
+        expect(actual).to eq(expected)
       end
 
     end
