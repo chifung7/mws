@@ -29,35 +29,35 @@ module Mws::Apis::Feeds
       end
 
       it 'should initialize a products feed' do
-        TargetedApi.as_null_object
+        stub_const(TargetedApi.to_s, class_spy("DoubleTargetedApi"))
         expect(TargetedApi).to receive(:new).with(anything, connection.merchant, :product)
         api = Api.new(connection)
         expect(api.products).not_to be nil
       end
 
       it 'should initialize an images feed' do
-        TargetedApi.as_null_object
+        stub_const(TargetedApi.to_s, class_spy("DoubleTargetedApi"))
         expect(TargetedApi).to receive(:new).with(anything, connection.merchant, :image)
         api = Api.new(connection)
         expect(api.images).not_to be nil
       end
 
       it 'should initialize a prices feed' do
-        TargetedApi.as_null_object
+        stub_const(TargetedApi.to_s, class_spy("DoubleTargetedApi"))
         expect(TargetedApi).to receive(:new).with(anything, connection.merchant, :price)
         api = Api.new(connection)
         expect(api.prices).not_to be nil
       end
 
       it 'should initialize a shipping feed' do
-        TargetedApi.as_null_object
+        stub_const(TargetedApi.to_s, class_spy("DoubleTargetedApi"))
         expect(TargetedApi).to receive(:new).with(anything, connection.merchant, :override)
         api = Api.new(connection)
         expect(api.shipping).not_to be nil
       end
 
       it 'should initialize an inventory feed' do
-        TargetedApi.as_null_object
+        stub_const(TargetedApi.to_s, class_spy("DoubleTargetedApi"))
         expect(TargetedApi).to receive(:new).with(anything, connection.merchant, :inventory)
         api = Api.new(connection)
         expect(api.inventory).not_to be nil

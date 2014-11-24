@@ -4,7 +4,7 @@ module Mws::Apis::Feeds
 
   describe Shipping do
 
-    context '.new' do
+    describe '.new' do
 
       it 'should require non-nil sku' do
         expect { Shipping.new(nil) }.to raise_error Mws::Errors::ValidationError, 
@@ -40,7 +40,7 @@ module Mws::Apis::Feeds
 
     end
 
-    context '#to_xml' do
+    describe '#to_xml' do
       shipping = Shipping.new('987612345') do
         unrestricted :continental_us, :standard
         restricted :continental_us, :expedited
@@ -70,7 +70,10 @@ module Mws::Apis::Feeds
           }
         }
       end.doc.root.to_xml
-      shipping.to_xml.should == expected
+
+      it 'should generate xml' do
+        expect(shipping.to_xml).to eq(expected)
+      end
     end
 
   end

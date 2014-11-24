@@ -281,11 +281,13 @@ module Mws
         end
         expect(Net::HTTP).to receive(:start).with('mws.amazonservices.com', 443, use_ssl: true).and_yield(http)
         expect { connection.response_for(:get, '/', 'foo=bar', nil) }.to raise_error do | error |
+          # puts error.inspect
+          #<Mws::Errors::ServerError: Type: HTTP, Code: 500, Message: Internal Server Error, Details: None>
           expect(error).to be_a Errors::ServerError
-          expect(error.type).to eq('Server')
+          expect(error.type).to eq('HTTP')
           expect(error.code).to eq(500)
           expect(error.message).to eq('Internal Server Error')
-          expect(error.detail).to eq('None')
+          expect(error.details).to eq('None')
         end
       end
 
