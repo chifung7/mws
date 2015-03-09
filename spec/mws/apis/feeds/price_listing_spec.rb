@@ -37,6 +37,24 @@ module Mws::Apis::Feeds
         expect(price.sale).to eq(SalePrice.new(Money.new(12.99, :usd), from, to))
       end
 
+      it 'should be able to construct a price with min and max seller allowed prices' do
+        price = PriceListing.new('987612345', 42.42, min_allowed: 20, max_allowed: 50)
+        expect(price.min_allowed).to eq(Money.new(20, :usd))
+        expect(price.max_allowed).to eq(Money.new(50, :usd))
+      end
+
+      it 'should validate that the base price is less than the minimum seller allowed price' do
+        expect {
+          PriceListing.new('987612345', 9.99, min_allowed: 10.00)
+        }.to raise_error Mws::Errors::ValidationError, "'Base Price' must be greater than 'Minimum Allowed Price'."
+      end
+
+      it 'should validate that the base price is more than the maximum seller allowed price' do
+        expect {
+          PriceListing.new('987612345', 19.99, max_allowed: 10.00)
+        }.to raise_error Mws::Errors::ValidationError, "'Base Price' must be less than 'Maximum Allowed Price'."
+      end
+
       it 'should validate that the base price is less than the minimum advertised price' do
         expect {
           PriceListing.new('987612345', 9.99, min: 10.00)
@@ -78,6 +96,21 @@ module Mws::Apis::Feeds
               EndDate to.iso8601
               SalePrice '12.99', currency: 'EUR'
             }
+          }
+        end.doc.root.to_xml
+        expect(price.to_xml).to eq(expected)
+      end
+
+      it 'should serialize minimum and maximum seller allowed prices' do
+        from = 1.day.ago
+        to = 4.months.from_now
+        price = PriceListing.new('987612345', 14.99, min_allowed: 10, max_allowed: 20.1)
+        expected = Nokogiri::XML::Builder.new do
+          Price {
+            SKU '987612345'
+            StandardPrice '14.99', currency: 'USD'
+            MinimumSellerAllowedPrice '10.00', currency: 'USD'
+            MaximumSellerAllowedPrice '20.10', currency: 'USD'
           }
         end.doc.root.to_xml
         expect(price.to_xml).to eq(expected)
