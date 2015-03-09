@@ -43,16 +43,22 @@ module Mws::Apis::Feeds
         expect(price.max_allowed).to eq(Money.new(50, :usd))
       end
 
+      it 'should allow base price within maximum and minimum seller allowed price boundary' do
+        price = PriceListing.new('987612345', 19.99, max_allowed: 19.99, min_allowed: 19.99)
+        expect(price.min_allowed).to eq(Money.new(19.99, :usd))
+        expect(price.max_allowed).to eq(Money.new(19.99, :usd))
+      end
+
       it 'should validate that the base price is less than the minimum seller allowed price' do
         expect {
           PriceListing.new('987612345', 9.99, min_allowed: 10.00)
-        }.to raise_error Mws::Errors::ValidationError, "'Base Price' must be greater than 'Minimum Allowed Price'."
+        }.to raise_error Mws::Errors::ValidationError, "'Base Price' must not be less than 'Minimum Allowed Price'."
       end
 
       it 'should validate that the base price is more than the maximum seller allowed price' do
         expect {
           PriceListing.new('987612345', 19.99, max_allowed: 10.00)
-        }.to raise_error Mws::Errors::ValidationError, "'Base Price' must be less than 'Maximum Allowed Price'."
+        }.to raise_error Mws::Errors::ValidationError, "'Base Price' must not be greater than 'Maximum Allowed Price'."
       end
 
       it 'should validate that the base price is less than the minimum advertised price' do

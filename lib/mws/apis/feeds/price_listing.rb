@@ -47,14 +47,14 @@ module Mws::Apis::Feeds
       end
 
       if @min_allowed
-        unless @min_allowed.amount < @base.amount
-          raise Mws::Errors::ValidationError, "'Base Price' must be greater than 'Minimum Allowed Price'."
+        unless @base.amount >= @min_allowed.amount
+          raise Mws::Errors::ValidationError, "'Base Price' must not be less than 'Minimum Allowed Price'."
         end
       end
 
       if @max_allowed
-        unless @max_allowed.amount > @base.amount
-          raise Mws::Errors::ValidationError, "'Base Price' must be less than 'Maximum Allowed Price'."
+        unless @base.amount <= @max_allowed.amount
+          raise Mws::Errors::ValidationError, "'Base Price' must not be greater than 'Maximum Allowed Price'."
         end
       end
     end
