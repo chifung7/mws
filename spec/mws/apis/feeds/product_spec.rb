@@ -29,6 +29,7 @@ module Mws::Apis::Feeds
           brand 'Test Brand'
           manufacturer 'Test manufacture'
           name 'Test Product'
+          authors ['Foo', 'Bar']
         end
 
         expect(product.upc).to eq('4321')
@@ -36,6 +37,7 @@ module Mws::Apis::Feeds
         expect(product.brand).to eq('Test Brand')
         expect(product.manufacturer).to eq('Test manufacture')
         expect(product.name).to eq('Test Product')
+        expect(product.authors).to eq(['Foo', 'Bar'])
       end
 
       it 'should support building with isbn' do
@@ -204,6 +206,8 @@ module Mws::Apis::Feeds
             }
             DescriptionData {
               Title 'Test Product'
+              Author 'Foo'
+              Author 'Bar'
               Brand 'Test Brand'
               Description 'Some product'
               BulletPoint 'Bullet Point 1'
@@ -239,6 +243,7 @@ module Mws::Apis::Feeds
           tax_code 'GEN_TAX_CODE'
           brand 'Test Brand'
           name 'Test Product'
+          authors ['Foo', 'Bar']
           description 'Some product'
           msrp 19.99, 'USD'
           manufacturer 'Test manufacture'

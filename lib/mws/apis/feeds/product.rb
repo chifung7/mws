@@ -8,7 +8,7 @@ module Mws::Apis::Feeds
 
     attr_accessor :standard_product_id, :standard_product_id_type
     attr_accessor :condition
-    attr_accessor :tax_code, :msrp, :brand, :manufacturer, :name, :description, :bullet_points, :item_type
+    attr_accessor :tax_code, :msrp, :brand, :manufacturer, :name, :authors, :description, :bullet_points, :item_type
     attr_accessor :item_dimensions, :package_dimensions, :package_weight, :shipping_weight
     attr_accessor :category, :details
 
@@ -46,10 +46,15 @@ module Mws::Apis::Feeds
 
         @condition.to_xml('Condition', xml) unless @condition.nil?
 
-        unless @name.nil? and @brand.nil? and @description.nil? and @item_dimensions.nil? and
+        unless @name.nil? and @authors.nil? and @brand.nil? and @description.nil? and @item_dimensions.nil? and
             @package_weight.nil? and @shipping_weight.nil? and @msrp.nil? and @manufacture.nil? and @item_type.nil?
           xml.DescriptionData {
             xml.Title @name unless @name.nil?
+            unless @authors.nil?
+              @authors.each do |author|
+                xml.Author author
+              end
+            end
             xml.Brand @brand  unless @brand.nil?
             xml.Description @description  unless @description.nil?
             bullet_points.each do | bullet_point |
